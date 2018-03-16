@@ -287,7 +287,7 @@ namespace ACBr.Net.Integrador
 
             EnviarComando(envio);
 
-            AguardarResposta(NumeroSessao.ToString());
+            AguardarResposta(envio.Identificador.Valor);
 
             var resposta = IntegradorRetorno.Load(UltimaResposta);
             return resposta;
@@ -313,7 +313,7 @@ namespace ACBr.Net.Integrador
         {
             var envio = new IntegradorEnvio
             {
-                Identificador = { Valor = "" },
+                Identificador = { Valor = Guid.NewGuid().ToString() },
                 Componente =
                 {
                     Nome = NomeComponente,
@@ -351,7 +351,7 @@ namespace ACBr.Net.Integrador
 
             do
             {
-                Guard.Against<TimeoutException>(Configuracoes.TimeOut > 0 && resposta.IsEmpty() && DateTime.Now >= timeLimit);
+                Thread.Sleep(500);
 
                 var files = Directory.GetFiles(Configuracoes.PastaOutput, "*.xml");
                 if (files.Length < 1) continue;
@@ -372,8 +372,9 @@ namespace ACBr.Net.Integrador
                         //
                     }
                 }
+                
+                Guard.Against<TimeoutException>(Configuracoes.TimeOut > 0 && resposta.IsEmpty() && DateTime.Now >= timeLimit);
 
-                Thread.Sleep(500);
             } while (resposta.IsEmpty());
 
             UltimaResposta = resposta;

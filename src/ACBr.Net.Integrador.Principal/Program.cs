@@ -16,9 +16,10 @@ namespace ACBr.Net.Integrador.Principal
 
             integrador.NomeComponente = "MF-e";
             integrador.NomeMetodo = "ConsultarSAT";
-            
 
             IntegradorRetorno retorno =  integrador.Enviar(adicionarNumeroSessao);
+            Console.WriteLine(retorno.ToString());
+            Console.ReadKey();
             
         }
     }

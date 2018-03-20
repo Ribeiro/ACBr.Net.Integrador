@@ -114,8 +114,8 @@ namespace ACBr.Net.Integrador
         /// <summary>
         /// Retorna a última resposta do integrador fiscal.
         /// </summary>
-        [Browsable(false)]
-        public string UltimaResposta { get; internal set; }
+        //[Browsable(false)]
+        //public string UltimaResposta { get; internal set; }
 
         #endregion Properties
 
@@ -287,10 +287,7 @@ namespace ACBr.Net.Integrador
 
             EnviarComando(envio);
 
-            AguardarResposta(envio.Identificador.Valor);
-
-            var resposta = IntegradorRetorno.Load(UltimaResposta);
-            return resposta;
+            return IntegradorRetorno.Load(AguardarResposta(envio.Identificador.Valor));
         }
 
         /// <summary>
@@ -339,7 +336,7 @@ namespace ACBr.Net.Integrador
             File.Move(file, $"{file.Substring(0, file.Length - 4)}.xml");
         }
 
-        private void AguardarResposta(string identificacao)
+        private string AguardarResposta(string identificacao)
         {
             if (!Directory.Exists(Path.Combine(Configuracoes.PastaOutput, "Processados")))
                 Directory.CreateDirectory(Path.Combine(Configuracoes.PastaOutput, "Processados"));
@@ -377,7 +374,7 @@ namespace ACBr.Net.Integrador
 
             } while (resposta.IsEmpty());
 
-            UltimaResposta = resposta;
+            return resposta;
         }
 
         #endregion Private
